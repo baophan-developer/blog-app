@@ -24,8 +24,15 @@ export async function register(username: string, password: string) {
         const result = getDataLocalStore(username);
         if (result) throw new Error("Account exist!");
         setDataLocalStore(username, { username, password });
+        return {
+            status: 200,
+            message: "Account register success!",
+        };
     } catch (error: any) {
-        return error?.message || "Error";
+        return {
+            status: 400,
+            message: error?.message || "Error",
+        };
     }
 }
 
