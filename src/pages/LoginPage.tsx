@@ -7,6 +7,7 @@ import Form from "../components/Form";
 import TextFieldEle from "../components/TextFieldEle";
 import useNotification from "../hooks/useNotification";
 import { useMutation } from "@tanstack/react-query";
+import { setDataLocalStore } from "../utils";
 
 const LinkCustom = styled(Link)(({ theme }) => [
     {
@@ -34,8 +35,9 @@ function LoginPage() {
         mutationKey: ["handleLogin"],
         mutationFn: async (value) =>
             await login(value.username, value.password),
-        onSuccess: (data) => {
+        onSuccess: (data, variables) => {
             if (data.status === 200) {
+                setDataLocalStore("user", variables);
                 navigate("/");
             }
             if (data.status === 400) {
