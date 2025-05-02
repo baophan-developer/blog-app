@@ -7,9 +7,15 @@ export async function login(username: string, password: string) {
         if (!result) throw new Error("Account not exist!");
         if (result.password !== password)
             throw new Error("Incorrect password!");
-        return "Login success!";
+        return {
+            status: 200,
+            message: "Login success!",
+        };
     } catch (error: any) {
-        return error?.message || "Error";
+        return {
+            status: 400,
+            message: error?.message || "Error",
+        };
     }
 }
 
