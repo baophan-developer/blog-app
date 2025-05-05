@@ -1,15 +1,15 @@
 import {Box, Button, Typography} from "@mui/material";
+import {useMutation} from "@tanstack/react-query";
+import {useNavigate} from "react-router-dom";
+import * as Yup from "yup";
+import {register} from "../apis";
 import Form from "../components/Form";
 import TextFieldEle from "../components/TextFieldEle";
-import * as Yup from "yup";
-import {useMutation} from "@tanstack/react-query";
-import {register} from "../apis";
-import {useNavigate} from "react-router-dom";
-import useNotification from "../hooks/useNotification";
+import useNotistack from "../hooks/useNotistack";
 
 function RegisterPage() {
 	const navigate = useNavigate();
-	const {showNotification, content} = useNotification();
+	const {open} = useNotistack();
 
 	const {mutate, isPending} = useMutation<
 		any,
@@ -21,17 +21,21 @@ function RegisterPage() {
 		mutationFn: async (value) => await register(value.username, value.password),
 		onSuccess: (data) => {
 			if (data.status === 200) {
+				open(data.message, {
+					variant: "success",
+				});
 				navigate("/login");
 			}
 			if (data.status === 400) {
-				showNotification({message: data.message});
+				open(data.message, {
+					variant: "error",
+				});
 			}
 		},
 	});
 
 	return (
 		<Box>
-			{content}
 			<Form
 				onSubmit={function (data: any) {
 					mutate(data);

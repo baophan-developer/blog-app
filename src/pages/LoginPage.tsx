@@ -5,9 +5,9 @@ import * as yup from "yup";
 import {login} from "../apis";
 import Form from "../components/Form";
 import TextFieldEle from "../components/TextFieldEle";
-import useNotification from "../hooks/useNotification";
 import {useMutation} from "@tanstack/react-query";
 import {setDataLocalStore} from "../utils";
+import useNotistack from "../hooks/useNotistack";
 
 const LinkCustom = styled(Link)(({theme}) => [
 	{
@@ -21,7 +21,7 @@ const LinkCustom = styled(Link)(({theme}) => [
 
 function LoginPage() {
 	const navigate = useNavigate();
-	const {showNotification, content} = useNotification();
+	const {open} = useNotistack();
 
 	const {mutate, isPending} = useMutation<
 		{
@@ -37,10 +37,15 @@ function LoginPage() {
 		onSuccess: (data, variables) => {
 			if (data.status === 200) {
 				setDataLocalStore("user", variables);
+				open(data.message, {
+					variant: "success",
+				});
 				navigate("/");
 			}
 			if (data.status === 400) {
-				showNotification({message: data.message});
+				open(data.message, {
+					variant: "error",
+				});
 			}
 		},
 	});
@@ -54,7 +59,6 @@ function LoginPage() {
 
 	return (
 		<div>
-			{content}
 			<Form
 				onSubmit={onSubmit}
 				objectShape={{
