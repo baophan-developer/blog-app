@@ -1,5 +1,5 @@
 import {yupResolver} from "@hookform/resolvers/yup";
-import {PropsWithChildren} from "react";
+import {memo, PropsWithChildren} from "react";
 import {FieldValues, FormProvider, SubmitHandler, useForm} from "react-hook-form";
 import * as yup from "yup";
 
@@ -22,4 +22,4 @@ function Form(props: Props) {
 	);
 }
 
-export default Form;
+export default memo(Form);
